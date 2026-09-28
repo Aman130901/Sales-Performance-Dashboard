@@ -1,0 +1,31 @@
+// ----------------------------------------------------
+// PRO LEVEL DASHBOARD DAX & TIPS
+// ----------------------------------------------------
+
+// ==========================================
+// STEP 1: CREATE A PROPER CALENDAR TABLE
+// (Taaki YTD aur Previous Year wale error theek ho jayein)
+// ==========================================
+// Power BI me upar 'Modeling' tab pe jayein -> 'New Table' pe click karein aur ye paste karein:
+
+Calendar = 
+ADDCOLUMNS(
+    CALENDAR(MIN(sales_data[OrderDate]), MAX(sales_data[OrderDate])),
+    "Year", YEAR([Date]),
+    "Month Name", FORMAT([Date], "MMM"),
+    "Month Number", MONTH([Date]),
+    "Quarter", "Q" & FORMAT([Date], "Q")
+)
+
+// NOTE: Ye table banane ke baad, Modeling view me 'sales_data'[OrderDate] aur 'Calendar'[Date] ko line khinch kar (Relationship) jod dein.
+
+// ==========================================
+// STEP 2: FIX TIME INTELLIGENCE MEASURES
+// (Ab aap ye naye formula copy paste karke naye measures bana sakte hain)
+// ==========================================
+
+Pro YTD Revenue = TOTALYTD([Total Revenue], 'Calendar'[Date])
+
+Pro Previous Year Revenue = CALCULATE([Total Revenue], SAMEPERIODLASTYEAR('Calendar'[Date]))
+
+Pro YoY Growth % = DIVIDE([Total Revenue] - [Pro Previous Year Revenue], [Pro Previous Year Revenue], 0)

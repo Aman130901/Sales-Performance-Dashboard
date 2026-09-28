@@ -1,0 +1,29 @@
+// ----------------------------------------------------
+// DAX Measures for Sales Performance Dashboard
+// ----------------------------------------------------
+
+// 1. Core KPIs
+Total Revenue = SUM(sales_data[SalesAmount])
+
+Total Profit = SUM(sales_data[Profit])
+
+Total Orders = DISTINCTCOUNT(sales_data[OrderID])
+
+Total Quantity Sold = SUM(sales_data[Quantity])
+
+// 2. Profitability Metrics
+Profit Margin % = DIVIDE([Total Profit], [Total Revenue], 0)
+
+Average Order Value = DIVIDE([Total Revenue], [Total Orders], 0)
+
+// 3. Time Intelligence Measures
+YTD Revenue = TOTALYTD([Total Revenue], sales_data[OrderDate])
+
+Previous Year Revenue = CALCULATE([Total Revenue], SAMEPERIODLASTYEAR(sales_data[OrderDate]))
+
+YoY Growth % = DIVIDE([Total Revenue] - [Previous Year Revenue], [Previous Year Revenue], 0)
+
+// 4. Product and Customer Measures
+Top Selling Product Revenue = CALCULATE([Total Revenue], TOPN(1, ALL(sales_data[ProductName]), [Total Revenue], DESC))
+
+Avg Discount % = AVERAGE(sales_data[Discount])
